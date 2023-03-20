@@ -1,0 +1,1 @@
+#This folder stores all the images that are added in the blog post.
