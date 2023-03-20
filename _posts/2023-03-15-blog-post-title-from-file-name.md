@@ -71,7 +71,7 @@ This paper was inspired by two models:
 
 This paper focuses on combining the benefits of both of these models, resulting in **Better Few-shot Fine-tuning of Language Models** or as the authors like to call it - **Language Models’ Best Friend Forever (LM-BFF)**.
 
-Here is a visualization of what this set of techniques entails:
+Here is a visualization of what this approach entails:
 
 ![image](/images/lm_bff.png)
 
@@ -131,7 +131,7 @@ Input sentences are taken from the training dataset D<sub>train</sub> and are pa
 
 The decoding process then involves searching for an appropriate output that aligns with all instances of the training data D<sub>train</sub>. To achieve this, a search strategy referred to as **beam search** is employed. This technique utilizes a *beam* containing the N most probable sequences at each point of time. In this experiment, the authors opted for a wide beam width of 100, which generates a good number of diverse templates.
 
-From this set, each generated template is fine-tuned on the training data D<sub>train</sub> while the development set D<sub>dev</sub> is used to pick the best template or to find the top-k templates to use as an ensemble (for multi-prompt).
+From this set, each generated template is fine-tuned on the training data D<sub>train</sub> while the development set D<sub>dev</sub> is used to pick the best template or to find the top-k templates to use as an ensemble (for multi-prompt - that's a story for another day).
 
 #### 3.3 Dynamic demonstration selection
 
@@ -167,7 +167,7 @@ Here are the major findings we see from this research:
 
 Which simply means LM-BFF performs better than vanilla fine-tuning!
 
-***Note:** If you are interested in implementing the LM-BFF technique, the authors have also publically provided their code [here](https://github.com/princeton-nlp/LM-BFF). Unfortunately I could not implement it due to limitations of my device, but if I do get an opportunity to do so in the future, I will update my findings the blog!*
+***Note:** If you are interested in implementing the LM-BFF technique, the authors have also publically provided their code [here](https://github.com/princeton-nlp/LM-BFF). Unfortunately I could not implement it due to limitations of my device, but if I do get an opportunity to do so in the future, I will definitely update my findings here.*
 
 ---
 
@@ -184,7 +184,7 @@ Since there is no such thing as absolute perfection in this world (except maybe 
 
 ### 6. Further Research
 
-To conclude, the paper "Making Pre-trained Language Models Better Few-shot Learners" presents a promising approach to improving few-shot learning with pre-trained language models.
+From what we have seen so far, the paper "Making Pre-trained Language Models Better Few-shot Learners" presents a promising approach to improving few-shot learning with pre-trained language models.
 1. For a small number of training examples, LM-BFF outperforms standard fine-tuning by 11% on average.
 2. It is important to sample similar examples while incorporating demonstrations in context.
 3. RoBERTa-large achieves about 90% accuracy on most binary sentence classification tasks with only 32 examples.
@@ -197,7 +197,9 @@ Another interesting feature introduced in their paper is the development of the 
 
 What do you think would be the next extension of this approach? Maybe LM-BFF-MS-FAP? Fully Automated Prompt generation? 
 
-I hope this article piqued your interest in the field of few-shot learning in NLP. *Thank you for reading!*
+I hope this article piqued your interest in the field of few-shot learning in NLP. 
+
+*Thank you for reading!*
 
 ---
 
