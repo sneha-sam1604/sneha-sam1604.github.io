@@ -77,19 +77,46 @@ Let's look at each one in detail.
 
 #### 3.1 Prompt-based fine-tuning
 
-In this technique, a MASK token is introduced after the input sentence in a template, hence the downstream task becomes a **Masked Language Model** problem.
+If you are wondering what a prompt is, here is the answer - a template along with the label word is called Prompt. 
+
+Let us look at the following example to understand this better.
 
 ![image](/images/prompt_based_ft.png)
 
-In the figure above, we see an input sentence *No reason to watch.* followed by a template with the \[MASK\] token. This token is then passed into an MLM head and *label mapping* is performed. Label mapping simply refers to assigning a label or class to a given word. In the example above, 'great' is labeled as a 'positive' word, while 'terrible' is labeled 'negative'. 
+In prompt-based fine-tuning, a MASK token is introduced after the input sentence in a template, hence the downstream task becomes a **Masked Language Model** problem.
+The diagram above illustrates this method using an example where an input phrase "No reason to watch" is followed by a template with the \[MASK\] token, which is essentially a blank to be filled in. This token is then passed into an MLM head and *label mapping* is performed. Label mapping simply refers to assigning a label or class to a given word. In the example above, 'great' is labeled as a 'positive' word, while 'terrible' is labeled 'negative'.
 
-If you were wondering what a prompt is, the answer is right here - a template along with the label word is called **Prompt**. 
-Performs much better than the classical approach
-It is closer to the pre-trained model
-No new parameters are generated
-This can be easily extended to both classification as well as regression
+A major advantage of this method is that it does not generate any new parameters and can easily be extended to both classification and regression.
 
 #### 3.2 Automatic prompt generation
+
+One of the experiments that was performed by Gao et al., showed that the type of prompt given as input greatly influenced the results obtained. For example, the placement of the \[MASK\] tokens, the order of the label words and so on.
+
+Creating prompts manually is not only time-consuming but also requires domain expertise, which may not always be accessible. Hence the team of researchers came up with a smart strategy to automatically generate these prompts.
+
+Since prompts are a combination of templates and label words, the generation is also done for each of these components separately. Thus, we have the following methods of automatic prompt generation:
+#### 3.2.1 Automatic selection of label words
+
+Here the template is manually generated and is fixed. The image below clearly explains the process of how the best label word is selected.
+
+![image](/images/auto_sel_of_label_words.png)
+
+What we see here is that once the classified input from the training dataset is passed through the MLM, the **top-k** vocabulary is selected based on the conditional likelihood using the initial Language Model (RoBERTa). All possible combinations are then enumerated and to narrow down the search space further, the **top-n** assignments that maximizes zero shot accuracy on the training dataset D<sub>train</sub> are selected. (Here n, k are hyperparameters.)
+These top-n label words are fine-tuned and re-ranked to find the best label using the development set D<sub>dev</sub>.
+
+#### 3.2.2 Automatic generation of templates
+
+Since we are automating the generation of template, the label words are created manually in this method. The following figure from the paper demonstrates this technique effectively.
+
+![image](/images/auto_gen_of_templates.png)
+
+The method uses a fixed set of label words M(Y) and generates a set of templates {T}.
+
+Input sentences are taken from the training dataset D<sub>train</sub> and are passed to the T5 model. This is where all the magic happens. Since this model is already pre-trained for filling in missing spans and create blanks for the remaining words (exactly what we need to do), it can construct templates without us specifying the number of tokens beforehand. Is this magic or what?
+
+The decoding process then involves searching for an appropriate output that aligns with all instances of the training data D<sub>train</sub>. To achieve this, a search strategy referred to as **beam search** is employed. This technique utilizes a *beam* containing the N most probable sequences at each point of time. In this experiment, the authors opted for a wide beam width of 100, which generates a good number of diverse templates.
+
+From this set, each generated template is fine-tuned on the training data D<sub>train</sub> while the development set D<sub>dev</sub> is used to pick the best template or to find the top-k templates to use as an ensemble (for multi-prompt).
 
 #### 3.3 Dynamic demonstration selection
 
@@ -104,10 +131,6 @@ This can be easily extended to both classification as well as regression
 ---
 
 ### 6. Conclusion
-
----
-
-
 
 ---
 
