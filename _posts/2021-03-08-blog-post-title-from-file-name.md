@@ -10,6 +10,8 @@ This is a sample blog post. You can talk about all sorts of fun things here.
 
 ### This is a header
 
+![image](/images/lm_bff.png)
+
 #### Some T-SQL Code
 
 ```tsql
