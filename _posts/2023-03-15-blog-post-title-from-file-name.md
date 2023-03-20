@@ -1,6 +1,7 @@
 ## A Language Model's Best Friend
 
 It is astounding to see how rapidly the world of NLP is progressing and continuously expanding the limits of what can be achieved with language comprehension. What is more exciting is how researchers are now exploring the potential of few-shot learning to advance this field. With these advancements, we can expect NLP to revolutionize how humans use language to interact with machines.
+
 One such paper that I recently had the opportunity to read is titled ['Making Pre-Trained Language Models Better Few-shot Learners'](https://arxiv.org/abs/2012.15723). Published in ACL 2021, this work by Tianyu Gao, Adam Fisch and Danqi Chen presents an interesting approach to improve few-shot learning capabilities of pre-trained language models.
 
 Keep reading this article to delve deeper into their findings!
@@ -10,12 +11,13 @@ Keep reading this article to delve deeper into their findings!
 ### Outline
 
 In this blog post we will cover the following topics:
-1.	Basic Terminology
-2.	Motivation and Background
-3.	Techniques
-4.	Findings
-5.	Limitations
-6.	Further Research
+
+1.	[Basic Terminology](#1-basic-terminology)
+2.	[Motivation and Background](#2-motivation-and-background)
+3.	[Techniques](#3-techniques)
+4.	[Findings](#4-findings)
+5.	[Limitations](#5-limitations)
+6.	[Further Research](#6-further-research)
 
 ----
 
@@ -47,7 +49,7 @@ T5 refers to [Text-To-Text Transfer Transformer](https://arxiv.org/abs/1910.1068
 
 #### 1.6 What is a development dataset?
 
-We all maybe familiar with a training dataset and a test dataset. But there is something also known as a development set or as some of us may have heard - a validation set. This set is mostly used to fine-tune hyperparameters such as number of hidden layers, learning rates, etc. There are algorithms like k-fold cross validation that help in splitting the data into the different datasets.
+We all maybe familiar with a training dataset and a test dataset. But there is something also known as a development set or as some of us may have heard - a **validation** set. This set is mostly used to fine-tune hyperparameters such as number of hidden layers, learning rates, etc. There are algorithms like k-fold cross validation that help in splitting the data into the different datasets.
 
 ---
 
@@ -149,13 +151,13 @@ The figure below depicts an example of dynamically selected demonstrations from 
 
 ### 4. Findings
 
-Before taking a look at the results obtained in this paper, let us go through the assumptions that were considered during the setup. 
+Before taking a look at the results obtained in this paper, let us go through the **assumptions** that were considered during the setup. 
 
 - The experiment was run on 15 English tasks. This includes 8 single sentence and 7 sentence pair tasks.
 - The authors experimented with the RoBERTa-large model.
    They did run the experiment with both BERT and RoBERTa and found that the latter model performed better.
 - When we saw the automatic generation of prompts in section 3, you would have noticed the automatic generation of templates and selection of label words were separate. The authors compared these two techniques along with a combined automatic generation of templates and label words and noticed that automatic templates worked best and hence they continue to use this for the rest of the experiment.
-- In section 3.2, we observed the automatic generation of prompts. It was evident that generating templates and selecting label words were distinct processes. The authors conducted a comparison between these two approaches and a combination of template and label word generation. They found out that automatic templates had better performance compared to other techniques, thus they utilized this for the remainder of the experiment.
+- In [Section 3.2](#32-automatic-prompt-generation), we observed the automatic generation of prompts. It was evident that generating templates and selecting label words were distinct processes. The authors conducted a comparison between these two approaches and a combination of template and label word generation. They found out that automatic templates had better performance compared to other techniques, thus they utilized this for the remainder of the experiment.
 - The number of training samples used was set to 16.
 - The size of the training and development sets are equal. This is done so that the experiment is run on a true few-shot setting.
 - The performance was measured across 5 random splits of the training and developement sets D<sub>train</sub> and D<sub>dev</sub> to obtain better estimation of variance and robust performance.
@@ -167,18 +169,18 @@ Here are the major findings we see from this research:
 
 Which simply means LM-BFF performs better than vanilla fine-tuning!
 
-***Note:** If you are interested in implementing the LM-BFF technique, the authors have also publically provided their code [here](https://github.com/princeton-nlp/LM-BFF). Unfortunately I could not implement it due to limitations of my device, but if I do get an opportunity to do so in the future, I will definitely update my findings here.*
+***Note:** If you are interested in implementing the LM-BFF approach, you can access the authors' code on GitHub [here](https://github.com/princeton-nlp/LM-BFF). Unfortunately I could not implement it due to limitations of my device, but if I do get an opportunity to do so in the future, I will definitely update my findings here.*
 
 ---
 
 ### 5. Limitations
 
-Since there is no such thing as absolute perfection in this world (except maybe that perfect pull of mozarella from the pizza or the smooth stroke of your eyeliner on the first go), let's take a look at certain aspects of this research that can be improved.
+Since there is no such thing as absolute perfection in this world (except maybe that perfect pull of mozarella from the pizza or the smooth stroke of your eyeliner on the first go?), let's take a look at certain aspects of this research that can be improved.
 
 1. Unfortunately even though the results show better performance, it still suffers from high variance just like in standard fine-tuning.
 2. Although we say that the prompt is generated automatically, one part of it is always manually designed (either the template or the label word). This is still a cause for poor generalization.
 3. At least for now, the preferred task is the 'fill in the blanks' type task.
-4. As seen in section 3.3, the demonstrations from each class of the training dataset are concatenated to the input sentence. This would work for binary classification, but in cases where there a more than 5 classes, the context size could potentially go beyond the 512 of RoBERTa. A possible solution that could work is the use of long transformers or long-formers. 
+4. As seen in Section 3.3, the demonstrations from each class of the training dataset are concatenated to the input sentence. This would work for binary classification, but in cases where there a more than 5 classes, the context size could potentially go beyond the 512 of RoBERTa. A possible solution that could work is the use of long transformers or long-formers. 
 
 ---
 
@@ -191,7 +193,7 @@ From what we have seen so far, the paper "Making Pre-trained Language Models Bet
 
 In 2022, Park et al. and their team extended the LM-BFF approach and they named it [LM-BFF-MS](https://aclanthology.org/2022.acl-short.34/) (Better Few-shot Fine-tuning of Language Models with Multiple Soft demonstrations). 
 
-**A brief overview:** Instead of simply appending only one demonstration of each class to the input (as seen in Section 3.3), the extended approach appends multiple demonstrations in each class along with automatically generated *label phrases* instead of label words. They also use the concept of a *global demonstration memory* which shares soft tokens for various inputs. Based on their findings, the LM-BFF-MS shows improved and stable performance in five NLP tasks when compared to its previous version. Unfortunately the global memory did not always work as some tasks performed better with 'local' demonstrations for specific input sentences.
+**A brief overview:** Instead of simply appending only one demonstration of each class to the input (as seen in [Section 3.3](#33-dynamic-demonstration-selection)), the extended approach appends multiple demonstrations in each class along with automatically generated *label phrases* instead of label words. They also use the concept of a *global demonstration memory* which shares soft tokens for various inputs. Based on their findings, the LM-BFF-MS shows improved and stable performance in five NLP tasks when compared to its previous version, thus solving the first limitation we saw in [Section 5](#5-limitations). Unfortunately the global memory did not always work as some tasks performed better with 'local' demonstrations for specific input sentences.
 
 Another interesting feature introduced in their paper is the development of the Next Demonstration Prediction (NDP) task. According to this, the NDP *"predicts whether positive (or negative) examples in the demonstrations are correctly matched with a positive (or negative) label word for the prompted input."* 
 
@@ -205,18 +207,18 @@ I hope this article piqued your interest in the field of few-shot learning in NL
 
 ### References
 
-Tom B Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared Kaplan, Prafulla Dhariwal, Arvind Neelakantan, Pranav Shyam, Girish Sastry, Amanda Askell, et al. 2020. Language models are few-shot learners. *In Advances in Neural Information Processing Systems (NeurIPS).*
+[Tom B Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared Kaplan, Prafulla Dhariwal, Arvind Neelakantan, Pranav Shyam, Girish Sastry, Amanda Askell, et al. 2020. Language models are few-shot learners. *In Advances in Neural Information Processing Systems (NeurIPS).*](https://arxiv.org/abs/2005.14165)
 
-Tianyu Gao, Adam Fisch, and Danqi Chen. 2021. Making pre-trained language models better few-shot learners. *In Proceedings of the 59th Annual Meeting of the Association for Computational Linguistics and the 11th International Joint Conference on Natural Language Processing (Volume 1: Long Papers), pages 3816–3830, Online. Association for Computational Linguistics.*
+[Tianyu Gao, Adam Fisch, and Danqi Chen. 2021. Making pre-trained language models better few-shot learners. *In Proceedings of the 59th Annual Meeting of the Association for Computational Linguistics and the 11th International Joint Conference on Natural Language Processing (Volume 1: Long Papers), pages 3816–3830, Online. Association for Computational Linguistics.*](https://arxiv.org/abs/2012.15723)
 
-Eunhwan Park, Donghyeon Jeon, Seonhoon Kim, Inho Kang, and Seung-Hoon Na. 2022. LM-BFF-MS: Improving Few-Shot Fine-tuning of Language Models based on Multiple Soft Demonstration Memory. *In Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics (Volume 2: Short Papers), pages 310–317, Dublin, Ireland. Association for Computational Linguistics.*
+[Eunhwan Park, Donghyeon Jeon, Seonhoon Kim, Inho Kang, and Seung-Hoon Na. 2022. LM-BFF-MS: Improving Few-Shot Fine-tuning of Language Models based on Multiple Soft Demonstration Memory. *In Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics (Volume 2: Short Papers), pages 310–317, Dublin, Ireland. Association for Computational Linguistics.*](https://aclanthology.org/2022.acl-short.34/)
 
-Colin Raffel, Noam Shazeer, Adam Roberts, Katherine Lee, Sharan Narang, Michael Matena, Yanqi Zhou, Wei Li, and Peter J Liu. 2020. Exploring the limits
-of transfer learning with a unified text-to-text Transformer. *The Journal of Machine Learning Research (JMLR), 21(140).*
+[Colin Raffel, Noam Shazeer, Adam Roberts, Katherine Lee, Sharan Narang, Michael Matena, Yanqi Zhou, Wei Li, and Peter J Liu. 2020. Exploring the limits
+of transfer learning with a unified text-to-text Transformer. *The Journal of Machine Learning Research (JMLR), 21(140).*](https://arxiv.org/abs/1910.10683)
 
-Timo Schick and Hinrich Schutze. 2021a. Exploiting cloze questions for few-shot text classification and natural language inference. *In European Chapter of the Association for Computational Linguistics (EACL).*
+[Timo Schick and Hinrich Schutze. 2021a. Exploiting cloze questions for few-shot text classification and natural language inference. *In European Chapter of the Association for Computational Linguistics (EACL).*](https://arxiv.org/abs/2001.07676)
 
-Timo Schick and Hinrich Schutze. 2021b. It’s not just size that matters: Small language models are also few-shot learners. *In North American Chapter of the Association for Computational Linguistics (NAACL).*
+[Timo Schick and Hinrich Schutze. 2021b. It’s not just size that matters: Small language models are also few-shot learners. *In North American Chapter of the Association for Computational Linguistics (NAACL).*](https://arxiv.org/abs/2009.07118v2)
 
 ***Disclaimer:** This blog post only provides a brief overview of the paper, and not all information is included. It is recommended to read the full paper for a better understanding of the concepts discussed here, if you found this article interesting.*
 
