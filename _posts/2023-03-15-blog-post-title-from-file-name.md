@@ -195,13 +195,17 @@ In 2022, Park et al. and their team extended the LM-BFF approach and they named 
 
 **A brief overview:** Instead of simply appending only one demonstration of each class to the input (as seen in [Section 3.3](#33-dynamic-demonstration-selection)), the extended approach appends multiple demonstrations in each class along with automatically generated *label phrases* instead of label words. They also use the concept of a *global demonstration memory* which shares soft tokens for various inputs. Based on their findings, the LM-BFF-MS shows improved and stable performance in five NLP tasks when compared to its previous version, thus solving the first limitation we saw in [Section 5](#5-limitations). Unfortunately the global memory did not always work as some tasks performed better with 'local' demonstrations for specific input sentences.
 
+Take a look here:
+
+![image](/images/lm_bff_ms.png)
+
 Another interesting feature introduced in their paper is the development of the Next Demonstration Prediction (NDP) task. According to this, the NDP *"predicts whether positive (or negative) examples in the demonstrations are correctly matched with a positive (or negative) label word for the prompted input."* 
 
 What do you think would be the next extension of this approach? Maybe LM-BFF-MS-FAP? Fully Automated Prompt generation? 
 
 I hope this article piqued your interest in the field of few-shot learning in NLP. 
 
-*Thank you for reading!*
+Thank you for reading!
 
 ---
 
